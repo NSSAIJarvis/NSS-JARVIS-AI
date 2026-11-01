@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JARVIS AI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #050914;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  min-height: 100vh;
+  padding: 30px 18px;
+}
+
+h1 {
+  color: #42caff;
+  font-size: 36px;
+  letter-spacing: 5px;
+}
+
+#orb {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  margin: 65px auto 30px;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #fff,
+    #36baff 25%,
+    #064b9d 65%,
+    #020817
+  );
+  box-shadow: 0 0 35px #168dff, 0 0 90px #0755a8;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(.95); }
+  to { transform: scale(1.06); }
+}
+
+button {
+  background: #087fc4;
+  color: white;
+  border: 0;
+  padding: 15px 25px;
+  border-radius: 30px;
+  font-size: 17px;
+  margin: 8px;
+}
+
+#status {
+  color: #55d5ff;
+  margin: 20px;
+}
+
+#answer {
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 25px auto;
+  max-width: 500px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>J.A.R.V.I.S</h1>
+<p>JUST A RATHER VERY INTELLIGENT SYSTEM</p>
+
+<div id="orb"></div>
+
+<div id="status">JARVIS READY</div>
+
+<button onclick="listen()">🎙️ কথা বলো</button>
+
+<div id="answer">
+আমি তোমার নির্দেশের অপেক্ষায় আছি।
+</div>
+
+<script>
+const statusText = document.getElementById("status");
+const answer = document.getElementById("answer");
+
+function speak(text) {
+  answer.innerText = text;
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "bn-BD";
+
+  speechSynthesis.speak(speech);
+}
+
+function listen() {
+  const Recognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!Recognition) {
+    speak("তোমার ব্রাউজারে ভয়েস রিকগনিশন সাপোর্ট করছে না।");
+    return;
+  }
+
+  const recognition = new Recognition();
+
+  recognition.lang = "bn-BD";
+  recognition.interimResults = false;
+
+  statusText.innerText = "LISTENING...";
+
+  recognition.onresult = function(event) {
+    const command = event.results[0][0].transcript;
+    const c = command.toLowerCase();
+
+    if (c.includes("হ্যালো") || c.includes("হাই")) {
+      speak("হ্যালো! আমি জার্ভিস। কীভাবে সাহায্য করতে পারি?");
+    }
+
+    else if (c.includes("সময়") || c.includes("কয়টা বাজে")) {
+      speak("এখন সময় " + new Date().toLocaleTimeString("bn-BD"));
+    }
+
+    else {
+      speak("তোমার নির্দেশটি বুঝেছি। আরও উন্নত করার কাজ চলছে।");
+    }
+  };
+
+  recognition.onerror = function() {
+    statusText.innerText = "VOICE ERROR";
+  };
+
+  recognition.onend = function() {
+    statusText.innerText = "JARVIS READY";
+  };
+
+  recognition.start();
+}
+</script>
+
+</body>
+</html>
