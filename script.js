@@ -79,38 +79,32 @@ function listen() {
 
 
     recognition.onerror = function(event) {
+    isListening = false;
 
-        isListening = false;
+    document.getElementById("status").innerText = "VOICE ERROR";
 
-        statusText.innerText = "VOICE ERROR";
+    document.getElementById("answer").innerText =
+        "Voice Error: " + event.error;
+};
 
-        answer.innerText =
-            "Voice Error: " + event.error;
+recognition.onend = function() {
+    isListening = false;
 
-    };
-
-
-    recognition.onend = function() {
-
-        isListening = false;
-
-        statusText.innerText = "JARVIS READY";
-
-    };
-
-
-    try {
-
-        recognition.start();
-
-    } catch (error) {
-
-        isListening = false;
-
-        statusText.innerText = "VOICE ERROR";
-
+    if (document.getElementById("status").innerText !== "VOICE ERROR") {
+        document.getElementById("status").innerText = "JARVIS READY";
     }
+};
 
+try {
+    recognition.start();
+} catch (error) {
+    isListening = false;
+
+    document.getElementById("status").innerText = "VOICE ERROR";
+
+    document.getElementById("answer").innerText =
+        "Start Error: " + error.message;
+}
 }
 
 
